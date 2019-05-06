@@ -1,6 +1,9 @@
 const express = require('express');
-const router = express.Router();
+const crypto = require('crypto');
 const mysql = require('../service/service');
+
+const hash = crypto.createHash('md5');
+const router = express.Router();
 
 function selcetSql(name, param, res) {
   if (param) {
@@ -47,7 +50,8 @@ router.post('/register', (req, res) => {
     let name = req.query.name;
     let phone = req.query.phone;
     let email = req.query.email.toString();
-    let password = md5.update(req.query.password, 'utf8').digest('hex');
+    let password = hash.update(req.query.password, 'utf8');
+    console.log(digest('hex'))
     let sql = `SELECT * FROM userinfo WHERE name='${name}' AND phone='${phone}' AND email='${email}'`;
     mysql.query(sql, (err, result, fileds) => {
       if (result == '') {
