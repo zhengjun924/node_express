@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-router.get('/j',(req,res)=>{
+router.get('/',(req,res)=>{
     res.json({
         name:'zheng',
         gender:'男'

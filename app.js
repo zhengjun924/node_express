@@ -1,4 +1,5 @@
 const createError = require('http-errors');
+const cookieSession = require('cookie-session');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -22,7 +23,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+// 注册session
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
+// app.use((req,res,next) => {
+//   let uname = req.session.name;
+//   if (uname) {
+//    next();
+//   }else{
+//     let url = req.url;
+//     if (url === '/users/login') {
+//       next();
+//     }else{
+//       res.send('<script>alert("请登录")</script>');
+//     }
+//   }
+// })
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/zheng', usersZheng);
@@ -45,5 +63,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
