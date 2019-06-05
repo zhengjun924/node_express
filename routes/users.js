@@ -27,7 +27,7 @@ router.post('/register/user', (req, res) => {
         let name = req.body.name;
         selcetSql('name', name, res);
     } else {
-        res.sendStatus(404);
+        res.send('');
     }
 });
 
@@ -37,7 +37,7 @@ router.post('/register/phone', (req, res) => {
         let phone = req.body.phone;
         selcetSql('phone', phone, res);
     } else {
-        res.sendStatus(404);
+        res.send('');
     }
 });
 
@@ -47,24 +47,22 @@ router.post('/register/email', (req, res) => {
         let email = req.body.email.toString();
         selcetSql('email', email, res);
     } else {
-        res.sendStatus(404);
+        res.send('');
     }
 });
 
 /*注册 */
 router.post('/register', (req, res) => {
-    if (req.body.userName != '' && req.body.password != '' && req.body.phone != '' && req.body.email != '') {
-        let name = req.body.userName;
+    if (req.body.name != '' && req.body.password != '' && req.body.phone != '' && req.body.email != '') {
+        let name = req.body.name;
         let password = crypto.createHash('md5').update(req.body.password).digest('hex');
         let phone = req.body.phone;
         let email = req.body.email.toString();
         let sql = `SELECT * FROM userinfo WHERE name='${name}' AND phone='${phone}' AND email='${email}'`;
-        console.log(sql)
         mysql.query(sql, (err, result, fileds) => {
             if (result == '') {
                 let sql = `INSERT INTO userinfo (name,password,phone,email) VALUES('${name}','${password}','${phone}','${email}')`;
                 mysql.query(sql, (err, result) => {
-                    console.log(err)
                     if (!err) {
                         res.sendStatus(200);
                     }
