@@ -1,11 +1,11 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const crypto = require('crypto');
 const mysql = require('../service/service');
 
 const router = express.Router();
-// router.use(req=>{
-//     console.log(33232)
-// })
+
 function selcetSql(name, param, res) {
     if (param) {
         let sql = `SELECT * FROM userinfo WHERE ${name}='${param}'`;
@@ -22,10 +22,10 @@ function selcetSql(name, param, res) {
 }
 
 /* 用户 */
-router.post('/register/user', (req, res) => {
-    if (req.body.name && req.body.name != '') {
-        let name = req.body.name;
-        selcetSql('name', name, res);
+router.post('/register/userName', (req, res) => {
+    if (req.body.userName && req.body.userName != '') {
+        let userName = req.body.userName;
+        selcetSql('name', userName, res);
     } else {
         res.send('');
     }
