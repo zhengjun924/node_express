@@ -80,7 +80,6 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
     if (req.body.userName && req.body.password) {
         let name = req.body.userName;
-        req.session.name = name;
         let password = crypto.createHash('md5').update(req.body.password).digest('hex');
         let sql = `SELECT * FROM userinfo WHERE name='${name}' AND password='${password}'`;
         mysql.query(sql, (err, result) => {
