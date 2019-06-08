@@ -53,8 +53,8 @@ router.post('/register/email', (req, res) => {
 
 /*注册 */
 router.post('/register', (req, res) => {
-    if (req.body.name != '' && req.body.password != '' && req.body.phone != '' && req.body.email != '') {
-        let name = req.body.name;
+    if (req.body.userName != '' && req.body.password != '' && req.body.phone != '' && req.body.email != '') {
+        let name = req.body.userName;
         let password = crypto.createHash('md5').update(req.body.password).digest('hex');
         let phone = req.body.phone;
         let email = req.body.email.toString();
@@ -81,12 +81,21 @@ router.post('/login', (req, res) => {
     if (req.body.userName && req.body.password) {
         let name = req.body.userName;
         let password = crypto.createHash('md5').update(req.body.password).digest('hex');
-        let sql = `SELECT * FROM userinfo WHERE name='${name}' AND password='${password}'`;
+        let sql = `SELECT * FROM userinfo WHERE email='${name}' AND password='${password}'`;
+        console.log(sql)
         mysql.query(sql, (err, result) => {
+            if (result == '') {
+                res.json({
+                    status: 400,
+                    msg:'该用户还未注册'
+                });
+            }
             if (err) {
                 res.send(err)
             } else {
-                res.sendStatus(200);
+                res.json({
+                    status:200
+                });
             }
         });
     } else {
