@@ -1,6 +1,5 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
 const crypto = require('crypto');
 const mysql = require('../service/service');
 
@@ -80,22 +79,38 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
     if (req.body.userName && req.body.password) {
         let name = req.body.userName;
+        let token = jwt.sign({ name: name }, 'zheng', {
+            expiresIn: 60 * 60 * 2  // 2小时过期
+        });
         let password = crypto.createHash('md5').update(req.body.password).digest('hex');
-        let sql = `SELECT * FROM userinfo WHERE email='${name}' AND password='${password}'`;
-        console.log(sql)
+        let sql = `SELECT * FROM userinfo WHERE email='${name}'`;
+        let tokenSql = `UPDATE userinfo SET token='${token}' WHERE email='${name}'`;
         mysql.query(sql, (err, result) => {
-            if (result == '') {
+            if (result != '' && !err) {
+                let sql = `SELECT * FROM userinfo WHERE email='${name}' AND password='${password}'`;
+                mysql.query(sql, (err, result) => {
+                    if (result != '' && !err) {
+                        res.json({
+                            status: 200,
+                            token: token
+                        });
+                        mysql.query(tokenSql);
+                    } else if (result == '') {
+                        res.json({
+                            status: 400,
+                            msg: '密码错误'
+                        });
+                    } else {
+                        res.send(err)
+                    }
+                })
+            } else if (result == '') {
                 res.json({
                     status: 400,
-                    msg:'该用户还未注册'
+                    msg: '该用户还未注册'
                 });
-            }
-            if (err) {
-                res.send(err)
             } else {
-                res.json({
-                    status:200
-                });
+                res.send(err)
             }
         });
     } else {
