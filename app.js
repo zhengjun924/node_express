@@ -2,11 +2,13 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const formidableMiddleware = require('express-formidable');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const amusement = require('./routes/amusement');
+const assets = require('./routes/assets');
 
 const app = express();
 
@@ -18,11 +20,14 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static('public'));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/amusement', amusement);
+app.use('/assets', assets);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
