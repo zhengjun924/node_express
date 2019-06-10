@@ -1,28 +1,4 @@
 {
   "fileList": [
-    {
-      "img": "public\\images\\carousel\\upload_1dcf48afd38734b2ffeb5b9438ce7fe2.png",
-      "id": 0
-    },
-    {
-      "img": "public\\images\\carousel\\upload_b6c5f06d3590ab829d5ecf767d44f576.gif",
-      "id": 1
-    },
-    {
-      "img": "public\\images\\carousel\\upload_298163ed5bdca002f542a01dfdb74275.gif",
-      "id": 2
-    },
-    {
-      "img": "public\\images\\carousel\\upload_95550081eda1c5d39501a90307488846.png",
-      "id": 3
-    },
-    {
-      "img": "public/images\\carousel\\upload_fd6469c2ead3cde8af0e5be807add89d.gif",
-      "id": 4
-    },
-    {
-      "img": "public/images/carousel/upload_5bd72a746df0772bd440b2b88fb1e438.jpg",
-      "id": 5
-    }
   ]
 }
