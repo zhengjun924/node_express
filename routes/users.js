@@ -1,9 +1,15 @@
+const fs = require('fs');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const formidable = require('formidable');
 const mysql = require('../service/service');
 
 const router = express.Router();
+const form = new formidable.IncomingForm();
+form.uploadDir = 'public/images/user';
+form.keepExtensions = true;
+form.multiples = true;
 
 function selcetSql(name, param, res) {
     if (param) {
@@ -117,5 +123,32 @@ router.post('/login', (req, res) => {
         res.sendStatus(404);
     }
 });
+
+
+/* 提交用户头像 */
+router.post('/headSculpture', (req, res) => {
+    form.parse(req, (err, fields, files) => {
+        let name = files.avatar.name;
+        let url = 'zheng/' + files.avatar.path.replace(/\\/g, "/");
+        fs.readFile('public/data/headSculpture.json', (err, data) => {
+            if (err) res.send(err);
+            let imgInfo = JSON.parse(data.toString());
+            imgInfo.name = name;
+            imgInfo.url = url;
+            fs.writeFile('public/data/headSculpture.json', JSON.stringify(imgInfo, null, 2), (err, data) => {
+                if (err) res.send(err);
+                res.send(data);
+            });
+        });
+    });
+});
+
+/* 获取用户头像 */
+router.get('/getHeadSculpture', (req, res) => {
+    fs.readFile('public/data/headSculpture.json', (err, data) => {
+        if (err) res.send(err);
+        res.send(data);
+    })
+})
 
 module.exports = router;
