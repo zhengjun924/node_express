@@ -1,3 +1,29 @@
 {
-  "fileList": []
+  "fileList": [
+    {
+      "name": "upload_22af4c4e7151c01a3da59b203137af63.jpg",
+      "url": "zheng/public/images/carousel/upload_22af4c4e7151c01a3da59b203137af63.jpg",
+      "uid": 0
+    },
+    {
+      "name": "upload_4f5aaf0384d8d28a31a35db417a85822.jpg",
+      "url": "zheng/public/images/carousel/upload_4f5aaf0384d8d28a31a35db417a85822.jpg",
+      "uid": 1
+    },
+    {
+      "name": "upload_5d8ea748cad6afdef68b09e864dbe676.jpg",
+      "url": "zheng/public/images/carousel/upload_5d8ea748cad6afdef68b09e864dbe676.jpg",
+      "uid": 2
+    },
+    {
+      "name": "upload_e6ea4bb82a6b78ca2aa8d536a594ea5f.jpg",
+      "url": "zheng/public/images/carousel/upload_e6ea4bb82a6b78ca2aa8d536a594ea5f.jpg",
+      "uid": 3
+    },
+    {
+      "name": "upload_ac0064dfea68c37a992f0e40be1e0aeb.jpg",
+      "url": "zheng/public/images/carousel/upload_ac0064dfea68c37a992f0e40be1e0aeb.jpg",
+      "uid": 4
+    }
+  ]
 }

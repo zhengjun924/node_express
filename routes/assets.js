@@ -11,26 +11,35 @@ form.multiples = true;
 router.get('/img/carouselImg', (req, res) => {
     fs.readFile('public/data/carousel.json', 'utf8', (err, info) => {
         if (err) res.send(err);
-        res.send(info)
+        res.send(info);
     })
 });
 
 router.delete('/img/delete', (req, res) => {
     const uid = req.body.uid;
+    const url = req.body.url.substring(6);
     fs.readFile('public/data/carousel.json', (err, info) => {
         if (err) res.send(err);
+
         let data = JSON.parse(info.toString());
-        data.fileList = data.fileList.filter((item) => item.uid != uid)
+        data.fileList = data.fileList.filter((item) => item.uid != uid);
+
         fs.writeFile('public/data/carousel.json', JSON.stringify(data, null, 2), err => {
             if (err) res.send(err);
-            res.send(data)
+            fs.unlink(url, err => {
+                if (err) res.send(err);
+            });
+            res.json({
+                msg: '删除成功',
+                data: data
+            });
         });
     })
 })
 
 router.post('/img/carousel', (req, res) => {
     form.parse(req, function (err, fields, files) {
-        fields.name = files.file.name;
+        fields.name = files.file.path.substring(23);
         fields.url = 'zheng/' + files.file.path.replace(/\\/g, "/");
 
         fs.readFile('public/data/carousel.json', (err, data) => {
