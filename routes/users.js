@@ -86,7 +86,7 @@ router.post('/login', (req, res) => {
     if (req.body.userName && req.body.password) {
         let name = req.body.userName;
         let token = jwt.sign({ name: name }, 'zheng', {
-            expiresIn: 60 * 60 * 2  // 2小时过期
+            expiresIn: 60 * 30  // 半小时过期
         });
         let password = crypto.createHash('md5').update(req.body.password).digest('hex');
         let sql = `SELECT * FROM userinfo WHERE email='${name}'`;
@@ -124,22 +124,16 @@ router.post('/login', (req, res) => {
     }
 });
 
-
-/* 提交用户头像 */
-router.post('/headSculpture', (req, res) => {
-    form.parse(req, (err, fields, files) => {
-        let name = files.avatar.name;
-        let url = 'zheng/' + files.avatar.path.replace(/\\/g, "/");
-        fs.readFile('public/data/headSculpture.json', (err, data) => {
-            if (err) res.send(err);
-            let imgInfo = JSON.parse(data.toString());
-            imgInfo.name = name;
-            imgInfo.url = url;
-            fs.writeFile('public/data/headSculpture.json', JSON.stringify(imgInfo, null, 2), (err, data) => {
-                if (err) res.send(err);
-                res.send(data);
-            });
+router.get('/fetchUser', (req, res, next) => {
+    const token = req.headers.token;
+    jwt.verify(token, 'zheng', function (err, decoded) {
+        const name = decoded.name;
+        if (err) res.send(err);
+        res.json({
+            user: name,
+            status: 'ok'
         });
+        next();
     });
 });
 
@@ -148,7 +142,42 @@ router.get('/getHeadSculpture', (req, res) => {
     fs.readFile('public/data/headSculpture.json', (err, data) => {
         if (err) res.send(err);
         res.send(data);
-    })
-})
+    });
+});
+
+/* 提交用户头像 */
+router.post('/headSculpture', (req, res) => {
+    fs.readdir('public/images/user', (err, data) => {
+        data.forEach(item => {
+            fs.unlink(`public/images/user/${item}`, err => {
+                if (err) res.send(err);
+            })
+        });
+    });
+
+    form.parse(req, (err, fields, files) => {
+        let name = files.avatar.name;
+        let url = 'zheng/' + files.avatar.path.replace(/\\/g, "/");
+
+        fs.readFile('public/data/headSculpture.json', (err, data) => {
+            if (err) res.send(err);
+            let imgInfo = JSON.parse(data.toString());
+            imgInfo.name = name;
+            imgInfo.url = url;
+
+            fs.writeFile('public/data/headSculpture.json', JSON.stringify(imgInfo, null, 2), (err, data) => {
+                if (err) res.send(err);
+                res.send(data);
+            });
+        });
+
+    });
+});
+
+
+/* 修改个人信息 */
+router.post('/revise', (req, res) => {
+    res.send(req.body);
+});
 
 module.exports = router;
