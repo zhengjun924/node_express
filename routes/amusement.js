@@ -5,7 +5,7 @@ const createError = require('http-errors');
 const router = express.Router();
 
 router.get('/movies', (req, res) => {
-    let uname = req.session.name;
+     uname = req.session.name;
     reqwest({
         url: 'http://api.douban.com/v2/movie/subject/1764796',
         method: 'get',

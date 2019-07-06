@@ -2,11 +2,11 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const formidableMiddleware = require('express-formidable');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const userRouter = require('./routes/user');
+const userInfoRouter = require('./routes/userInfo');
 const amusement = require('./routes/amusement');
 const assets = require('./routes/assets');
 
@@ -21,12 +21,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/public', express.static('public'));
+app.use('/zheng/public', express.static('public'));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/amusement', amusement);
-app.use('/assets', assets);
+app.use('/zheng/user', userRouter);
+app.use('/zheng/userInfo', userInfoRouter);
+app.use('/zheng/amusement', amusement);
+app.use('/zheng/assets', assets);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

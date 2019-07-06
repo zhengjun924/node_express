@@ -17,6 +17,7 @@
     "ee-first": "^1.1.1",
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
+    "express-jwt": "^5.3.1",
     "finalhandler": "^1.1.2",
     "formidable": "^1.2.1",
     "forwarded": "^0.1.2",

@@ -21,7 +21,7 @@ router.delete('/img/delete', (req, res) => {
     fs.readFile('public/data/carousel.json', (err, info) => {
         if (err) res.send(err);
 
-        let data = JSON.parse(info.toString());
+        const data = JSON.parse(info.toString());
         data.fileList = data.fileList.filter((item) => item.uid != uid);
 
         fs.writeFile('public/data/carousel.json', JSON.stringify(data, null, 2), err => {
@@ -44,7 +44,7 @@ router.post('/img/carousel', (req, res) => {
 
         fs.readFile('public/data/carousel.json', (err, data) => {
             if (err) res.send(errr);
-            let carousel = JSON.parse(data.toString());
+            const carousel = JSON.parse(data.toString());
             fields.uid = (carousel.fileList.length - 1) + 1;
             carousel.fileList.push(fields);
 
