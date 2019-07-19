@@ -4,10 +4,42 @@ const createError = require('http-errors');
 
 const router = express.Router();
 
-router.get('/movies', (req, res) => {
-     uname = req.session.name;
+/* 豆瓣电影 */
+
+router.get('/movies/comingSoon', (req, res) => {
+    const { start = '0', count = '0' } = req.body;
     reqwest({
-        url: 'http://api.douban.com/v2/movie/subject/1764796',
+        url: 'https://api.douban.com/v2/movie/coming_soon?apikey=0df993c66c0c636e29ecbb5344252a4a',
+        method: 'get',
+        error: err => {
+            createError(err);
+        },
+        data: {
+            'start': start,
+            'count': count,
+        },
+        success: function (data) {
+            res.json(data);
+        }
+    })
+});
+
+router.get('/movies/inTheaters', (req, res) => {
+    reqwest({
+        url: 'https://api.douban.com/v2/movie/in_theaters?apikey=0df993c66c0c636e29ecbb5344252a4a',
+        method: 'get',
+        error: err => {
+            createError(err);
+        },
+        success: function (data) {
+            res.json(data);
+        }
+    })
+});
+
+router.get('/movies/top250', (req, res) => {
+    reqwest({
+        url: 'https://api.douban.com/v2/movie/top250?apikey=0df993c66c0c636e29ecbb5344252a4a',
         method: 'get',
         error: err => {
             createError(err);

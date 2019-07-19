@@ -21,7 +21,9 @@ router.get('/getHeadSculpture', (req, res) => {
             }
         });
     } else {
-        res.send('暂未上传');
+        res.json({
+            url:'/zheng/public/images/user/empty.png'
+        });
     }
 
 });

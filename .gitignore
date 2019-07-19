@@ -2,3 +2,4 @@ node_modules
 .http
 .sql
 yarn.lock
+start.bat

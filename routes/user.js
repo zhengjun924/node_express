@@ -12,9 +12,13 @@ function selcetSql(name, param, res) {
             if (!err && result == '') {
                 res.sendStatus(200);
             } else if (result != '') {
-                res.send('已存在');
+                res.json({
+                    msg: '已存在',
+                });
             } else if (err) {
-                res.send('发生错误');
+                res.json({
+                    msg: '发生错误',
+                });
             }
         });
     }
@@ -25,8 +29,6 @@ router.post('/register/userName', (req, res) => {
     if (req.body.userName && req.body.userName != '') {
         const userName = req.body.userName;
         selcetSql('name', userName, res);
-    } else {
-        res.send('');
     }
 });
 
