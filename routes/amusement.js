@@ -54,7 +54,7 @@ router.get('/movies/top250', (req, res) => {
 router.get('/music/new', (req, res) => {
     reqwest({
         url: 'http://m.kugou.com',
-        method: 'post',
+        method: 'get',
         data: {
             'json': true
         },
