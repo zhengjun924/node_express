@@ -1,6 +1,6 @@
 const fs = require('fs');
 const express = require('express');
-const mysql = require('../service/service');
+const mysql = require('../services/service');
 const formidable = require('formidable');
 
 const router = express.Router();

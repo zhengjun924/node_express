@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const mysql = require('../service/service');
+const mysql = require('../services/service');
 
 const router = express.Router();
 

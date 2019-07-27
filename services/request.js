@@ -1,4 +1,4 @@
-const mysql = require('../service/service');
+const mysql = require('./services');
 const axios = require('axios');
 
 (async function fetch() {
