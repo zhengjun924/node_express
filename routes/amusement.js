@@ -1,25 +1,35 @@
 const express = require('express');
 const reqwest = require('reqwest');
 const createError = require('http-errors');
+const mysql = require('../services/service');
 
 const router = express.Router();
 
 /* 豆瓣电影 */
 
 router.get('/movies/comingSoon', (req, res) => {
-    const { start = '0', count = '0' } = req.body;
-    reqwest({
-        url: 'https://api.douban.com/v2/movie/coming_soon?apikey=0df993c66c0c636e29ecbb5344252a4a',
-        method: 'get',
-        error: err => {
-            createError(err);
-        },
-        data: {
-            'start': start,
-            'count': count,
-        },
-        success: function (data) {
-            res.json(data);
+    const sql = `select b.title,CASE
+    WHEN GROUP_CONCAT(cast) IS NULL THEN
+    ''
+    ELSE GROUP_CONCAT(cast)
+    END  as casts,b.poster,b.mid,b.summary from  movie_casts a RIGHT JOIN  movie_list b on a.title=b.title where b.title IN(SELECT title FROM movie_list) group by b.title`;
+    
+    mysql.query(sql, (err, result, fileds) => {
+        if (!err) {
+            res.json(result)
+        }
+    })
+});
+
+router.post('/movies/comingSoon/delete', (req, res) => {
+    const {body:{mid}} = req;
+    const sql = `DELETE FROM movie_list WHERE mid='${mid}'`;
+    console.log(sql)
+    mysql.query(sql, (err, result, fileds) => {
+        if (!err) {
+            res.json({
+                msg:'删除成功'
+            })
         }
     })
 });
