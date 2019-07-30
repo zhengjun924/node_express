@@ -8,7 +8,7 @@ const router = express.Router();
 /* 豆瓣电影 */
 
 router.get('/movies/comingSoon', (req, res) => {
-    const sql = `SELECT a.title,IFNULL(GROUP_CONCAT(DISTINCT b.cast),'') AS casts,GROUP_CONCAT(DISTINCT c.genre) AS genres,a.alt,a.mid,a.poster,a.summary FROM movie_list a LEFT JOIN movie_casts b on a.title=b.title LEFT JOIN movie_genres c on a.title=c.title GROUP BY a.title`;
+    const sql = `SELECT a.title,IFNULL(GROUP_CONCAT(DISTINCT b.cast),'') AS casts,GROUP_CONCAT(DISTINCT c.genre) AS genres,a.alt,a.mid,a.poster,a.summary,a.mainland_pubdate FROM movie_list a LEFT JOIN movie_casts b on a.title=b.title LEFT JOIN movie_genres c on a.title=c.title GROUP BY a.title`;
 
     mysql.query(sql, (err, result, fileds) => {
         if (!err) {
@@ -20,11 +20,7 @@ router.get('/movies/comingSoon', (req, res) => {
 router.post('/movies/comingSoon/edit', (req, res) => {
     const { body: { mid } } = req;
 
-    const sql = `SELECT b.title,CASE
-    WHEN GROUP_CONCAT(cast) IS NULL THEN
-    ''
-    ELSE GROUP_CONCAT(cast)
-    END  AS casts,b.poster,b.mid,b.summary FROM  movie_casts a RIGHT JOIN  movie_list b on a.title=b.title WHERE b.title IN(SELECT title FROM movie_list) AND mid='${mid}' group by b.title`;
+    const sql = `SELECT a.title,IFNULL(GROUP_CONCAT(DISTINCT b.cast),'') AS casts,GROUP_CONCAT(DISTINCT c.genre) AS genres,a.alt,a.mid,a.poster,a.summary,a.mainland_pubdate FROM movie_list a LEFT JOIN movie_casts b on a.title=b.title LEFT JOIN movie_genres c on a.title=c.title WHERE a.title IN(SELECT title FROM movie_list) AND mid='${mid}' GROUP BY a.title`;
     mysql.query(sql, (err, result, fileds) => {
         if (!err) {
             res.json(result)
