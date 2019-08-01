@@ -30,7 +30,7 @@ function selcetSql(name, param, res) {
 router.post('/register/userName', (req, res) => {
     const { body: { userName } } = req;
     if (userName && userName !== '') {
-        selcetSql('name', userName, res);
+        selcetSql('userName', userName, res);
     }
 });
 
@@ -58,11 +58,11 @@ router.post('/register/phone', (req, res) => {
 router.post('/register', (req, res) => {
     let { body: { userName, password, phone, email, } } = req;
     if (userName !== '' && password !== '' && phone !== '' && email !== '') {
-        const password = crypto.createHash('md5').update(req.body.password).digest('hex');
-        const sql = `SELECT * FROM userinfo WHERE name='${name}' AND phone='${phone}' AND email='${email}'`;
+        password = crypto.createHash('md5').update(password).digest('hex');
+        const sql = `SELECT * FROM userinfo WHERE userName='${userName}' AND phone='${phone}' AND email='${email}'`;
         mysql.query(sql, (err, result, fileds) => {
             if (result.length === 0) {
-                const sql = `INSERT INTO userinfo (name,password,phone,email) VALUES('${name}','${password}','${phone}','${email}')`;
+                const sql = `INSERT INTO userinfo (userName,password,phone,email) VALUES('${userName}','${password}','${phone}','${email}')`;
                 mysql.query(sql, (err, result) => {
                     if (!err) {
                         res.josn({
@@ -88,35 +88,32 @@ router.post('/login', (req, res) => {
         const token = jwt.sign({ email: email }, 'zheng', {
             expiresIn: 60 * 30  // 半小时过期
         });
-        const password = crypto.createHash('md5').update(req.body.password).digest('hex');
+        password = crypto.createHash('md5').update(password).digest('hex');
         const sql = `SELECT * FROM userinfo WHERE email='${email}'`;
         mysql.query(sql, (err, result) => {
-            if (!err && result.length === 0) {
+            if (!err && result.length === 1) {
                 const sql = `SELECT * FROM userinfo WHERE email='${email}' AND password='${password}'`;
                 mysql.query(sql, (err, result) => {
-                    if (result != '' && !err) {
+                    if (!err && result.length === 1) {
                         res.json({
-                            status: 200,
+                            status: 1,
+                            msg: '登录成功',
                             token: token,
-                            name: email
+                            email: email
                         });
                         mysql.query(tokenSql);
-                    } else if (result == '') {
+                    } else {
                         res.json({
-                            status: 400,
+                            status: 0,
                             msg: '密码错误'
                         });
-                    } else {
-                        res.send(err)
                     }
                 })
-            } else if (result.length === 0) {
+            } else {
                 res.json({
                     status: 400,
                     msg: '该用户还未注册'
                 });
-            } else {
-                res.send(err)
             }
         });
     } else {
@@ -127,10 +124,10 @@ router.post('/login', (req, res) => {
 router.get('/fetchUser', (req, res, next) => {
     const { headers: { token } } = req;
     jwt.verify(token, 'zheng', function (err, decoded) {
-        const { name } = decoded;
+        const { email } = decoded;
         if (err) res.send(err);
         res.json({
-            user: name,
+            email: email,
             status: 'ok'
         });
         next();
