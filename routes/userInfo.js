@@ -52,7 +52,6 @@ router.post('/headSculpture', (req, res) => {
             });
         });
     });
-
 });
 
 

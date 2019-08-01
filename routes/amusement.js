@@ -8,7 +8,7 @@ const router = express.Router();
 /* 豆瓣电影 */
 
 router.get('/movies/comingSoon', (req, res) => {
-    const sql = `SELECT a.title,IFNULL(GROUP_CONCAT(DISTINCT b.cast),'') AS casts,GROUP_CONCAT(DISTINCT c.genre) AS genres,a.alt,a.mid,a.poster,a.summary,a.mainland_pubdate FROM movie_list a LEFT JOIN movie_casts b on a.title=b.title LEFT JOIN movie_genres c on a.title=c.title GROUP BY a.title`;
+    const sql = `SELECT a.title,IFNULL(GROUP_CONCAT(DISTINCT b.cast),'') AS casts,IFNULL(GROUP_CONCAT(DISTINCT c.genre),'') AS genres,a.alt,a.mid,a.poster,a.summary,a.mainland_pubdate FROM movie_list a LEFT JOIN movie_casts b on a.title=b.title LEFT JOIN movie_genres c on a.title=c.title GROUP BY a.title`;
 
     mysql.query(sql, (err, result, fileds) => {
         if (!err) {
@@ -17,10 +17,24 @@ router.get('/movies/comingSoon', (req, res) => {
     })
 });
 
+router.post('/movies/comingSoon/update', (req, res) => {
+    const { body: { alt = '', mainland_pubdate = '', mid = '', poster = '', summary = '', title = '', casts = '', geners = '', } } = req;
+    const sql = `UPDATE (movie_list a LEFT JOIN movie_casts b ON a.title=b.title) LEFT JOIN movie_genres c ON a.title=c.title SET a.title='${title}',a.alt='${alt}',a.mainland_pubdate='${mainland_pubdate}',a.poster='${poster}',a.summary='${summary}',a.mid='${mid}',b.cast="${casts}",c.genre='${geners}' WHERE a.title='${title}' ;`;
+
+    mysql.query(sql, (err, result, fileds) => {
+        if (!err) {
+            const { affectedRows } = result;
+            res.json({
+                msg: `更新了${affectedRows}条`
+            })
+        }
+    })
+});
+
 router.post('/movies/comingSoon/edit', (req, res) => {
     const { body: { mid } } = req;
 
-    const sql = `SELECT a.title,IFNULL(GROUP_CONCAT(DISTINCT b.cast),'') AS casts,GROUP_CONCAT(DISTINCT c.genre) AS genres,a.alt,a.mid,a.poster,a.summary,a.mainland_pubdate FROM movie_list a LEFT JOIN movie_casts b on a.title=b.title LEFT JOIN movie_genres c on a.title=c.title WHERE a.title IN(SELECT title FROM movie_list) AND mid='${mid}' GROUP BY a.title`;
+    const sql = `SELECT a.title,IFNULL(GROUP_CONCAT(DISTINCT b.cast),'') AS casts,IFNULL(GROUP_CONCAT(DISTINCT c.genre),'') AS genres,a.alt,a.mid,a.poster,a.summary,a.mainland_pubdate FROM movie_list a LEFT JOIN movie_casts b on a.title=b.title LEFT JOIN movie_genres c on a.title=c.title WHERE a.title IN(SELECT title FROM movie_list) AND mid='${mid}' GROUP BY a.title`;
     mysql.query(sql, (err, result, fileds) => {
         if (!err) {
             res.json(result)
