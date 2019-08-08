@@ -101,7 +101,6 @@ router.post('/login', (req, res) => {
                             token: token,
                             email: email
                         });
-                        mysql.query(tokenSql);
                     } else {
                         res.json({
                             status: 0,
