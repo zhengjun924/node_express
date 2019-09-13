@@ -11,21 +11,24 @@ form.multiples = true;
 
 /* 获取用户头像 */
 router.get('/getHeadSculpture', (req, res) => {
-    if (req.headers.token) {
-        const token = req.headers.token;
-        const sql = `SELECT headSculptureSrc FROM userinfo WHERE token='${token}'`;
-        mysql.query(sql, (err, result, files) => {
-            if (result && result != '') {
-                const url = result[0].headSculptureSrc;
-                res.send(url);
-            }
-        });
-    } else {
-        res.json({
-            url:'/zheng/public/images/user/empty.png'
-        });
-    }
-
+    
+    // if (req.headers.token) {
+    //     const token = req.headers.token;
+    //     const sql = `SELECT headSculptureSrc FROM userinfo WHERE token='${token}'`;
+    //     mysql.query(sql, (err, result, files) => {
+    //         if (result && result != '') {
+    //             const url = result[0].headSculptureSrc;
+    //             res.send(url);
+    //         }
+    //     });
+    // } else {
+    //     res.json({
+    //         url:'/zheng/public/images/user/empty.png'
+    //     });
+    // }
+    res.json({
+        url: '/zheng/public/images/user/empty.png'
+    });
 });
 
 /* 提交用户头像 */

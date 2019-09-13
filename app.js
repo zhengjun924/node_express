@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const jwt = require('jsonwebtoken');
+const jwtAuth = require('./routes/jwtAuth');
 const http = require('./services/request');
 
 const indexRouter = require('./routes/index');
@@ -26,6 +28,26 @@ app.use('/zheng/public', express.static('public'));
 
 app.use('/', indexRouter);
 app.use('/zheng/user', userRouter);
+// app.use(jwtAuth);
+app.use(function (req, res, next) {
+  const { headers: { token } } = req;
+  jwt.verify(token, 'zheng', function (err, decoded) {
+    if (err) {
+      res.json({
+        status: 12345,
+        msg: '无效令牌',
+      })
+    }
+    next();
+  });
+  // console.log(req.headers.token)
+  // if (err.name === 'UnauthorizedError') {   
+  //     //  这个需要根据自己的业务逻辑来处理（ 具体的err值 请看下面）
+  //   res.status(401).send('invalid token...');
+  // }
+
+});
+
 app.use('/zheng/userInfo', userInfoRouter);
 app.use('/zheng/amusement', amusement);
 app.use('/zheng/assets', assets);
