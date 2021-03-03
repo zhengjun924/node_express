@@ -36,7 +36,7 @@
     "node-cmd": "^3.0.0",
     "path-to-regexp": "^3.0.0",
     "proxy-addr": "^2.0.5",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "reqwest": "^2.0.5",
     "safe-buffer": "^5.1.2",
     "send": "^0.17.1",
